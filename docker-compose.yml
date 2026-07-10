@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  whisper:
+    image: <WHISPER_IMAGE>              # e.g. fedirz/faster-whisper-server or onerahmet/openai-whisper-asr-webservice
+    container_name: whisper
+    restart: unless-stopped
+    ports:
+      - "<HOST_PORT>:<CONTAINER_PORT>"  # e.g. 9000:9000
+    environment:
+      - MODEL_SIZE=<MODEL_SIZE>          # e.g. medium, large-v3
+      - DEVICE=cuda
+      # add other env vars specific to whichever image you choose
+    volumes:
+      - <LOCAL_MODEL_CACHE_PATH>:/root/.cache        # persists downloaded models between restarts
+      - <LOCAL_AUDIO_PATH>:/data                      # folder for audio files you want to transcribe
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  llm:
+    image: ollama/ollama
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "<HOST_PORT>:11434"
+    volumes:
+      - <LOCAL_OLLAMA_DATA_PATH>:/root/.ollama         # persists pulled models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+networks:
+  default:
+    name: ai-net
