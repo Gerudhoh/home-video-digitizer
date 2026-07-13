@@ -41,6 +41,11 @@ Split clips (issue #11) get a `sceneNN` suffix under a folder named for the sour
 
 Early planning stage — no pipeline code yet. See the GitHub issues for the current task breakdown, dependencies between stages, and open design questions.
 
+Christian is still working on getting Whisper Set up, so we can run whisper for now via: 
+```
+.venv-whisper/bin/python scripts/transcribe.py <video_path>
+```
+
 ## Development (planned)
 
 - Dockerized dev environment for parity between a local machine and the server PC
