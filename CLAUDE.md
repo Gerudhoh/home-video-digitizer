@@ -49,6 +49,10 @@ processed/julia/tape042/scene01.json
 
 Split clips (issue #11) get a `sceneNN` suffix under a folder named for the source tape, so a clip and its re-timestamped transcript slice always share a basename.
 
+## Transcript schema
+
+Transcript JSON extends raw Whisper output with a `source` path, a `recorded_date` slot (filled in by the OCR stage, issue #7), and per-segment `id`/`tags` fields so later stages (scene split, tagging) can reference a segment without relying on array position. Full schema and example in the README's "Transcript schema" section; reference fixture at `tests/fixtures/transcripts/julia/tape001_2026-07-13.json`.
+
 ## Where to find current scope
 
 The GitHub issues are the source of truth for task breakdown, open design questions, and dependencies between stages — check them before assuming a design choice not documented here.

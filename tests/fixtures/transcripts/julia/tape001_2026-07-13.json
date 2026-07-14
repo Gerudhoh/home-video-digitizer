@@ -1,31 +1,43 @@
 {
+  "source": "raw/julia/tape001_2026-07-13.mkv",
   "language": "en",
   "duration": 29.6746875,
+  "recorded_date": null,
   "segments": [
     {
+      "id": "s001",
       "start": 0.0,
       "end": 2.96,
-      "text": "Here we are. It's Christmas Eve."
+      "text": "Here we are. It's Christmas Eve.",
+      "tags": []
     },
     {
+      "id": "s002",
       "start": 6.24,
       "end": 10.64,
-      "text": "Pete, Cat, Annie over as per Christmas Eve tradition."
+      "text": "Pete, Cat, Annie over as per Christmas Eve tradition.",
+      "tags": []
     },
     {
+      "id": "s003",
       "start": 12.88,
       "end": 20.0,
-      "text": "And the girls are dancing. Oh, nice. Come on, Ben. Come on, Jess. Grab Bobo's hand."
+      "text": "And the girls are dancing. Oh, nice. Come on, Ben. Come on, Jess. Grab Bobo's hand.",
+      "tags": []
     },
     {
+      "id": "s004",
       "start": 20.72,
       "end": 22.400000000000002,
-      "text": "Merry Christmas, Pete and Cat."
+      "text": "Merry Christmas, Pete and Cat.",
+      "tags": []
     },
     {
+      "id": "s005",
       "start": 25.04,
       "end": 25.52,
-      "text": "Hi, Annie."
+      "text": "Hi, Annie.",
+      "tags": []
     }
   ]
 }

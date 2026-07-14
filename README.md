@@ -37,6 +37,35 @@ processed/julia/tape042/scene01.json
 
 Split clips (issue #11) get a `sceneNN` suffix under a folder named for the source tape, so a scene's clip and its re-timestamped transcript slice always share a basename.
 
+## Transcript schema
+
+Whisper output is stored as-is except for a few additions that later stages need — a source pointer for traceability, a slot for the OCR-extracted date, and per-segment IDs/tags so downstream stages can reference a segment without relying on array position:
+
+```json
+{
+  "source": "raw/julia/tape001_2026-07-13.mkv",
+  "language": "en",
+  "duration": 29.6746875,
+  "recorded_date": null,
+  "segments": [
+    {
+      "id": "s001",
+      "start": 0.0,
+      "end": 2.96,
+      "text": "Here we are. It's Christmas Eve.",
+      "tags": []
+    }
+  ]
+}
+```
+
+- `source` — path to the raw video this transcript was generated from
+- `recorded_date` — ISO 8601 date OCR'd from the footage's on-screen date overlay (issue #7); `null` until that stage runs
+- `segments[].id` — stable ID (`sNNN`, zero-padded, sequential), not the array index — split scenes and tag data reference segments by this ID
+- `segments[].tags` — populated by the tagging stage (issue #9's NLP pass, then AI fallback); empty until tagging runs
+
+See `tests/fixtures/transcripts/julia/tape001_2026-07-13.json` for a full example.
+
 ## Status
 
 Early planning stage — no pipeline code yet. See the GitHub issues for the current task breakdown, dependencies between stages, and open design questions.
