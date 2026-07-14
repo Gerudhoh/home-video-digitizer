@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Whisper Validation Results</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem; color: #1a1a1a; }
+  h1 { font-size: 1.4rem; }
+  .summary { list-style: none; padding: 0; display: flex; gap: 1.5rem; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; margin-top: 1.5rem; }
+  th, td { border: 1px solid #ddd; padding: 0.5rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: #f5f5f5; }
+  tr.pass { background: #eaf7ea; }
+  tr.warn { background: #fff8e1; }
+  tr.fail { background: #fdeaea; }
+  tr.error { background: #eee; }
+  .score { font-weight: 700; }
+  .parse-error { color: #b00; font-size: 0.85rem; margin-top: 0.25rem; }
+  ul { margin: 0; padding-left: 1.2rem; }
+</style>
+</head>
+<body>
+  <h1>Whisper Validation Results</h1>
+  
+    <ul class="summary">
+      <li>Runs: 1</li>
+      <li>Parse failures: 0</li>
+      <li>Mean score: 0.80</li>
+      <li>Score spread (stdev): 0.00</li>
+    </ul>
+    
+  <table>
+    <thead>
+      <tr><th>#</th><th>Score</th><th>Comments</th></tr>
+    </thead>
+    <tbody>
+      
+        <tr class="pass">
+          <td>1</td>
+          <td class="score">0.80</td>
+          <td><ul><li>misheard &#x27;Kath&#x27; as &#x27;Cat&#x27;</li><li>dropped line: &#x27;Whoops&#x27;</li></ul></td>
+        </tr>
+        
+    </tbody>
+  </table>
+</body>
+</html>
