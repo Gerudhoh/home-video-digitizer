@@ -28,7 +28,7 @@ def receive_judgement(prompt):
     resp = requests.post(
         f"{OLLAMA_HOST}/api/generate",
         json={
-            "model": "llama3.2:1b", 
+            "model": "llama3.1:8b",
             "prompt": prompt, 
             "stream": False
         },

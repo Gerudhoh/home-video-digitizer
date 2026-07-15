@@ -2,8 +2,25 @@
     {
         "score": 0.8,
         "comments": [
-            "misheard 'Kath' as 'Cat'",
-            "dropped line: 'Whoops'"
+            "proper name 'Kath' vs 'Cat'",
+            "missing/incorrect proper name for 'Bobo'"
+        ]
+    },
+    {
+        "score": 0.8,
+        "comments": [
+            "Substantive content: 'CNN is picking up Toronto' vs 'seeing it...it's picking up drama'",
+            "Misheard proper name: 'TV hall' instead of 'view of the TV'"
+        ]
+    },
+    {
+        "score": 0.6,
+        "comments": [
+            "Dropped line: 'I want boy to get in the picture.'",
+            "Misheard/substituted proper names: 'Do Good' instead of 'Birdie'",
+            "Minor rewording: 'Merry Christmas' instead of 'say Merry Christmas'",
+            "Omission: 'This is great timing. Ok, Ben, Ben, Do Good's watching. Ok? I don't want you to freak out.'",
+            "Omission: 'Mommy' ( speaker reference)"
         ]
     }
 ]

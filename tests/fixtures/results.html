@@ -23,10 +23,10 @@
   <h1>Whisper Validation Results</h1>
   
     <ul class="summary">
-      <li>Runs: 1</li>
+      <li>Runs: 3</li>
       <li>Parse failures: 0</li>
-      <li>Mean score: 0.80</li>
-      <li>Score spread (stdev): 0.00</li>
+      <li>Mean score: 0.73</li>
+      <li>Score spread (stdev): 0.09</li>
     </ul>
     
   <table>
@@ -38,7 +38,19 @@
         <tr class="pass">
           <td>1</td>
           <td class="score">0.80</td>
-          <td><ul><li>misheard &#x27;Kath&#x27; as &#x27;Cat&#x27;</li><li>dropped line: &#x27;Whoops&#x27;</li></ul></td>
+          <td><ul><li>proper name &#x27;Kath&#x27; vs &#x27;Cat&#x27;</li><li>missing/incorrect proper name for &#x27;Bobo&#x27;</li></ul></td>
+        </tr>
+        
+        <tr class="pass">
+          <td>2</td>
+          <td class="score">0.80</td>
+          <td><ul><li>Substantive content: &#x27;CNN is picking up Toronto&#x27; vs &#x27;seeing it...it&#x27;s picking up drama&#x27;</li><li>Misheard proper name: &#x27;TV hall&#x27; instead of &#x27;view of the TV&#x27;</li></ul></td>
+        </tr>
+        
+        <tr class="warn">
+          <td>3</td>
+          <td class="score">0.60</td>
+          <td><ul><li>Dropped line: &#x27;I want boy to get in the picture.&#x27;</li><li>Misheard/substituted proper names: &#x27;Do Good&#x27; instead of &#x27;Birdie&#x27;</li><li>Minor rewording: &#x27;Merry Christmas&#x27; instead of &#x27;say Merry Christmas&#x27;</li><li>Omission: &#x27;This is great timing. Ok, Ben, Ben, Do Good&#x27;s watching. Ok? I don&#x27;t want you to freak out.&#x27;</li><li>Omission: &#x27;Mommy&#x27; ( speaker reference)</li></ul></td>
         </tr>
         
     </tbody>

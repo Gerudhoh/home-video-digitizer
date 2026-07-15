@@ -47,30 +47,18 @@ def transcribe(server_audio_path: Path):
         },
     )
     result = resp.json()
-    print(result)
 
-    # result = {
-    #     "language": info.language,
-    #     "duration": info.duration,
-    #     "segments": [
-    #         {
-    #             "start": seg.start,
-    #             "end": seg.end,
-    #             "text": seg.text.strip(),
-    #             "words": [
-    #                 {"start": w.start, "end": w.end, "word": w.word}
-    #                 for w in (seg.words or [])
-    #             ],
-    #         }
-    #         for seg in segments
-    #     ],
-    # }
-    # return result
+    return {
+        "language": result["language"],
+        "duration": result["duration"],
+        "text": result["text"]
+    }
 
-
-if __name__ == "__main__":
-    video_path = Path(sys.argv[1])
+def get_json_transcription(video_path):
     audio_track_path = create_audio_path(video_path)
     sever_audio_path = mount_audio_file_to_server(audio_track_path)
-    result = transcribe(sever_audio_path)
+    return transcribe(sever_audio_path)
+
+if __name__ == "__main__":
+    result = get_json_transcription(Path(sys.argv[1]))
     print(json.dumps(result, indent=2, ensure_ascii=False))

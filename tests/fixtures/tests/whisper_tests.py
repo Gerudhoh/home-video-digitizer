@@ -12,6 +12,14 @@ test_transcripts = [
     {
      "golden": str(FIXTURES_DIR / "transcripts/julia/tape001_2026-07-13_GOLDEN.txt"),
      "generated": str(FIXTURES_DIR / "transcripts/julia/tape001_2026-07-13.json"),
+    },
+    {
+     "golden": str(FIXTURES_DIR / "transcripts/julia/tape002_2026-07-15_GOLDEN.txt"),
+     "generated": str(FIXTURES_DIR / "transcripts/julia/tape002_2026-07-15.json"),
+    },
+    {
+     "golden": str(FIXTURES_DIR / "transcripts/julia/tape003_2026-07-15_GOLDEN.txt"),
+     "generated": str(FIXTURES_DIR / "transcripts/julia/tape003_2026-07-15.json"),
     }
 ]
 
