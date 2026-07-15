@@ -17,7 +17,7 @@ def normalize_whisper_transcript(whisper_transcript_path):
   whisper_json = json.loads(
     Path(whisper_transcript_path).read_text(encoding="utf-8")
   )
-  return " ".join(seg["text"] for seg in whisper_json["segments"])
+  return whisper_json["text"]
 
 def generate_prompt(whisper_transcript_path, golden_transcript_path):
    whisper_transcript = normalize_whisper_transcript(whisper_transcript_path)

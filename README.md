@@ -47,6 +47,7 @@ Whisper output is stored as-is except for a few additions that later stages need
   "language": "en",
   "duration": 29.6746875,
   "recorded_date": null,
+  "text": "Here we are. It's Christmas Eve. Pete, Cat, Annie over...",
   "segments": [
     {
       "id": "s001",
@@ -61,10 +62,12 @@ Whisper output is stored as-is except for a few additions that later stages need
 
 - `source` — path to the raw video this transcript was generated from
 - `recorded_date` — ISO 8601 date OCR'd from the footage's on-screen date overlay (issue #7); `null` until that stage runs
+- `text` — the full transcript as one string, straight from Whisper; always present, regardless of whether `segments` is available
+- `segments` — per-utterance breakdown with timestamps; `null` when the Whisper endpoint in use doesn't return segment-level timestamps (our current homelab endpoint only returns whole-clip `text`/`language`/`duration` — see issue #5). Stages needing timestamps (scene splitting, segment-level tagging) must handle a `null` `segments` array until a segment-capable endpoint is wired up.
 - `segments[].id` — stable ID (`sNNN`, zero-padded, sequential), not the array index — split scenes and tag data reference segments by this ID
 - `segments[].tags` — populated by the tagging stage (issue #9's NLP pass, then AI fallback); empty until tagging runs
 
-See `tests/fixtures/transcripts/julia/tape001_2026-07-13.json` for a full example.
+See `tests/fixtures/transcripts/julia/tape001_2026-07-13.json` for a full example (currently `segments: null`, reflecting the flat-text-only endpoint response).
 
 ## Status
 
