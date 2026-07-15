@@ -42,8 +42,8 @@ def create_audio_path(video_path):
 def mount_audio_file_to_server(audio_track_path):
     remote_path = rf"\\{SAMBA_HOST}\Share\TapeAudio\{audio_track_path.name}"
     smbclient.shutil.copy(str(audio_track_path), remote_path)
-    # Return the path as the whisper container sees the same volume
-    return f"{WHISPER_SHARE_ROOT}/TapeAudio/{audio_track_path.name}"
+    # Return the SMB path (for cleanup) and the path as the whisper container sees the same volume
+    return remote_path, f"{WHISPER_SHARE_ROOT}/TapeAudio/{audio_track_path.name}"
 
 
 def transcribe(server_audio_path: Path):
@@ -66,8 +66,14 @@ def transcribe(server_audio_path: Path):
 
 def get_json_transcription(video_path):
     audio_track_path = create_audio_path(video_path)
-    server_audio_path = mount_audio_file_to_server(audio_track_path)
-    return transcribe(server_audio_path)
+    try:
+        remote_path, server_audio_path = mount_audio_file_to_server(audio_track_path)
+        try:
+            return transcribe(server_audio_path)
+        finally:
+            smbclient.remove(remote_path)
+    finally:
+        audio_track_path.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
