@@ -28,7 +28,7 @@ def generate_prompt(whisper_transcript_path, golden_transcript_path):
 def receive_judgement(prompt):
     resp = requests.post(
         f"{OLLAMA_HOST}/api/generate",
-        json={"model": "llama3.1:8b", "prompt": prompt, "stream": False},
+        json={"model": "llama3.1:8b", "prompt": prompt, "format": "json", "stream": False},
         timeout=120,
     )
     resp.raise_for_status()

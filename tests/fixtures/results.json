@@ -1,26 +1,32 @@
 [
     {
-        "score": 0.8,
+        "score": 0.7,
         "comments": [
-            "proper name 'Kath' vs 'Cat'",
-            "missing/incorrect proper name for 'Bobo'"
-        ]
-    },
-    {
-        "score": 0.8,
-        "comments": [
-            "Substantive content: 'CNN is picking up Toronto' vs 'seeing it...it's picking up drama'",
-            "Misheard proper name: 'TV hall' instead of 'view of the TV'"
+            "Kath spelled as Cat",
+            "Golden transcript mentions 'Bobo', generated transcript does not"
         ]
     },
     {
         "score": 0.6,
         "comments": [
-            "Dropped line: 'I want boy to get in the picture.'",
-            "Misheard/substituted proper names: 'Do Good' instead of 'Birdie'",
-            "Minor rewording: 'Merry Christmas' instead of 'say Merry Christmas'",
-            "Omission: 'This is great timing. Ok, Ben, Ben, Do Good's watching. Ok? I don't want you to freak out.'",
-            "Omission: 'Mommy' ( speaker reference)"
+            "TV hall",
+            "boat",
+            "drama",
+            "picking up drama",
+            "missing filler word (uh)",
+            "Times Square",
+            "flattering"
+        ]
+    },
+    {
+        "score": 0.8,
+        "comments": [
+            "Missing line: \"Boy wants to get in the picture\"",
+            "\"He said, why was I going to get a picture?\" likely misheard",
+            "\"Say hi to your good\" instead of \"Hi Do Good! Hi Do good\"",
+            "\"Do you want to get a picture?\" missing context, but roughly equivalent to \"I want boy to get in the picture\"",
+            "Missing line: \"Julia. Birdie wants to get in the picture\"",
+            "Missing filler words and rewording of some sentences"
         ]
     }
 ]

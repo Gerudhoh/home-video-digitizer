@@ -35,8 +35,11 @@ def extract_judgement(raw_response):
 if __name__ == "__main__":
     results = []
     for transcript in test_transcripts:
-        raw_response = validate_via_llm(transcript["generated"], transcript["golden"])
-        results.append(extract_judgement(raw_response))
+        try:
+            raw_response = validate_via_llm(transcript["generated"], transcript["golden"])
+            results.append(extract_judgement(raw_response))
+        except Exception as e:
+            results.append({"judge_call_failed": f"{transcript['generated']}: {e}"})
     results_path = FIXTURES_DIR / "results.json"
     results_path.write_text(json.dumps(results, indent=4), encoding="utf-8")
     generate_test_results_file(results_path, FIXTURES_DIR / "results.html")
