@@ -37,6 +37,6 @@ if __name__ == "__main__":
     for transcript in test_transcripts:
         raw_response = validate_via_llm(transcript["generated"], transcript["golden"])
         results.append(extract_judgement(raw_response))
-    results_path = Path("results.json")
+    results_path = FIXTURES_DIR / "results.json"
     results_path.write_text(json.dumps(results, indent=4), encoding="utf-8")
-    generate_test_results_file(results_path, Path("results.html"))
+    generate_test_results_file(results_path, FIXTURES_DIR / "results.html")

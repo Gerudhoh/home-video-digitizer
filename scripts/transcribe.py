@@ -30,7 +30,7 @@ def create_audio_path(video_path):
     audio = stream.audio
     output = ffmpeg.output(audio, str(audio_track_path), acodec="libmp3lame")
     try:
-        ffmpeg.run(output, overwrite_output=True)
+        ffmpeg.run(output, overwrite_output=True, capture_stderr=True)
     except ffmpeg.Error as e:
         raise RuntimeError(
             f"ffmpeg audio extraction failed: {e.stderr.decode('utf-8')}"

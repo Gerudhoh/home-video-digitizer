@@ -8,6 +8,10 @@ from pathlib import Path
 
 DEFAULT_OUTPUT = "results.html"
 
+# Per issues/plans/002-transcript-testing.md: pass threshold is 0.85 (0-1 scale).
+PASS_THRESHOLD = 0.85
+WARN_THRESHOLD = 0.4
+
 
 def normalize_entry(entry):
     if isinstance(entry, (int, float)):
@@ -30,9 +34,9 @@ def normalize_entry(entry):
 def score_band(score):
     if score is None:
         return "error"
-    if score >= 0.7:
+    if score >= PASS_THRESHOLD:
         return "pass"
-    if score >= 0.4:
+    if score >= WARN_THRESHOLD:
         return "warn"
     return "fail"
 
