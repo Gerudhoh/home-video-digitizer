@@ -1,0 +1,6 @@
+.env
+.venv-whisper/
+__pycache__/
+*.pyc
+tests/fixtures/raw/**/*.mp4
+tests/fixtures/audio/**/*.mp3
