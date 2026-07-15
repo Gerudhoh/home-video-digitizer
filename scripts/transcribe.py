@@ -19,8 +19,11 @@ WHISPER_SHARE_ROOT = "/media/library"  # where the whisper CT mounts the shared 
 
 smbclient.ClientConfig(username=SAMBA_USERNAME, password=SAMBA_PASSWORD)
 
+
 def create_audio_path(video_path):
-    audio_dir = Path(*["audio" if part == "raw" else part for part in video_path.parent.parts])
+    audio_dir = Path(
+        *["audio" if part == "raw" else part for part in video_path.parent.parts]
+    )
     audio_dir.mkdir(parents=True, exist_ok=True)
     audio_track_path = audio_dir / video_path.with_suffix(".mp3").name
     stream = ffmpeg.input(video_path)
@@ -29,9 +32,12 @@ def create_audio_path(video_path):
     try:
         ffmpeg.run(output, overwrite_output=True)
     except ffmpeg.Error as e:
-        raise RuntimeError(f"ffmpeg audio extraction failed: {e.stderr.decode('utf-8')}") from e
+        raise RuntimeError(
+            f"ffmpeg audio extraction failed: {e.stderr.decode('utf-8')}"
+        ) from e
 
     return audio_track_path
+
 
 def mount_audio_file_to_server(audio_track_path):
     remote_path = rf"\\{SAMBA_HOST}\Share\TapeAudio\{audio_track_path.name}"
@@ -39,25 +45,30 @@ def mount_audio_file_to_server(audio_track_path):
     # Return the path as the whisper container sees the same volume
     return f"{WHISPER_SHARE_ROOT}/TapeAudio/{audio_track_path.name}"
 
+
 def transcribe(server_audio_path: Path):
     resp = requests.post(
         f"{WHISPER_HOST}/transcribe",
         json={
             "input_path": str(server_audio_path),
         },
+        timeout=300,
     )
+    resp.raise_for_status()
     result = resp.json()
 
     return {
         "language": result["language"],
         "duration": result["duration"],
-        "text": result["text"]
+        "text": result["text"],
     }
+
 
 def get_json_transcription(video_path):
     audio_track_path = create_audio_path(video_path)
-    sever_audio_path = mount_audio_file_to_server(audio_track_path)
-    return transcribe(sever_audio_path)
+    server_audio_path = mount_audio_file_to_server(audio_track_path)
+    return transcribe(server_audio_path)
+
 
 if __name__ == "__main__":
     result = get_json_transcription(Path(sys.argv[1]))

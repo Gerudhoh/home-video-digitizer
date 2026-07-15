@@ -1,6 +1,7 @@
 import json
 import sys
 from pathlib import Path
+
 FIXTURES_DIR = Path(__file__).parent.parent
 
 sys.path.insert(0, str(FIXTURES_DIR / "scripts"))
@@ -10,24 +11,26 @@ from generate_test_results import generate_test_results_file
 
 test_transcripts = [
     {
-     "golden": str(FIXTURES_DIR / "transcripts/julia/tape001_2026-07-13_GOLDEN.txt"),
-     "generated": str(FIXTURES_DIR / "transcripts/julia/tape001_2026-07-13.json"),
+        "golden": str(FIXTURES_DIR / "transcripts/julia/tape001_2026-07-13_GOLDEN.txt"),
+        "generated": str(FIXTURES_DIR / "transcripts/julia/tape001_2026-07-13.json"),
     },
     {
-     "golden": str(FIXTURES_DIR / "transcripts/julia/tape002_2026-07-15_GOLDEN.txt"),
-     "generated": str(FIXTURES_DIR / "transcripts/julia/tape002_2026-07-15.json"),
+        "golden": str(FIXTURES_DIR / "transcripts/julia/tape002_2026-07-15_GOLDEN.txt"),
+        "generated": str(FIXTURES_DIR / "transcripts/julia/tape002_2026-07-15.json"),
     },
     {
-     "golden": str(FIXTURES_DIR / "transcripts/julia/tape003_2026-07-15_GOLDEN.txt"),
-     "generated": str(FIXTURES_DIR / "transcripts/julia/tape003_2026-07-15.json"),
-    }
+        "golden": str(FIXTURES_DIR / "transcripts/julia/tape003_2026-07-15_GOLDEN.txt"),
+        "generated": str(FIXTURES_DIR / "transcripts/julia/tape003_2026-07-15.json"),
+    },
 ]
+
 
 def extract_judgement(raw_response):
     try:
         return json.loads(raw_response["response"])
     except (KeyError, TypeError, json.JSONDecodeError):
         return raw_response
+
 
 if __name__ == "__main__":
     results = []

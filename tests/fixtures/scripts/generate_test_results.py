@@ -1,4 +1,3 @@
-
 # 100% vibe coded by Claude Code
 
 import html
@@ -8,6 +7,7 @@ import sys
 from pathlib import Path
 
 DEFAULT_OUTPUT = "results.html"
+
 
 def normalize_entry(entry):
     if isinstance(entry, (int, float)):
@@ -20,7 +20,11 @@ def normalize_entry(entry):
             "parse_error": None,
         }
 
-    return {"score": None, "comments": [], "parse_error": f"unrecognized entry: {entry!r}"}
+    return {
+        "score": None,
+        "comments": [],
+        "parse_error": f"unrecognized entry: {entry!r}",
+    }
 
 
 def score_band(score):
@@ -44,7 +48,9 @@ def render_html(results):
         band = score_band(r["score"])
         score_display = f"{r['score']:.2f}" if r["score"] is not None else "N/A"
         comments_html = (
-            "<ul>" + "".join(f"<li>{html.escape(c)}</li>" for c in r["comments"]) + "</ul>"
+            "<ul>"
+            + "".join(f"<li>{html.escape(c)}</li>" for c in r["comments"])
+            + "</ul>"
             if r["comments"]
             else "<em>none</em>"
         )
@@ -105,6 +111,8 @@ def render_html(results):
 </body>
 </html>
 """
+
+
 def generate_test_results_file(scores_path, output_path):
     entries = json.loads(scores_path.read_text(encoding="utf-8"))
     results = [normalize_entry(e) for e in entries]
@@ -112,11 +120,14 @@ def generate_test_results_file(scores_path, output_path):
     output_path.write_text(render_html(results), encoding="utf-8")
     print(f"Wrote {output_path}")
 
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print(f"Usage: generate_test_results.py <scores_json_path> [output_html={DEFAULT_OUTPUT}]")
+        print(
+            f"Usage: generate_test_results.py <scores_json_path> [output_html={DEFAULT_OUTPUT}]"
+        )
         sys.exit(1)
-    
+
     scores_path = Path(sys.argv[1])
     output_path = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(DEFAULT_OUTPUT)
 
