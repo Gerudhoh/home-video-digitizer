@@ -39,7 +39,7 @@ Split clips (issue #11) get a `sceneNN` suffix under a folder named for the sour
 
 ## Transcript schema
 
-Whisper output is stored as-is except for a few additions that later stages need — a source pointer for traceability, a slot for the OCR-extracted date, and per-segment IDs/tags so downstream stages can reference a segment without relying on array position:
+This is the *target* schema for later stages — a source pointer for traceability, a slot for the OCR-extracted date, and per-segment IDs/tags so downstream stages can reference a segment without relying on array position. **`scripts/transcribe.py` does not produce this today**: it currently returns only `language`, `duration`, and `text` (see `tape002_2026-07-15.json`/`tape003_2026-07-15.json` for real output). `source`, `recorded_date`, `segments`, and `tags` get added by later stages (or a future transcribe.py update) that don't exist yet:
 
 ```json
 {
@@ -63,17 +63,17 @@ Whisper output is stored as-is except for a few additions that later stages need
 - `source` — path to the raw video this transcript was generated from
 - `recorded_date` — ISO 8601 date OCR'd from the footage's on-screen date overlay (issue #7); `null` until that stage runs
 - `text` — the full transcript as one string, straight from Whisper; always present, regardless of whether `segments` is available
-- `segments` — per-utterance breakdown with timestamps; `null` when the Whisper endpoint in use doesn't return segment-level timestamps (our current homelab endpoint only returns whole-clip `text`/`language`/`duration` — see issue #5). Stages needing timestamps (scene splitting, segment-level tagging) must handle a `null` `segments` array until a segment-capable endpoint is wired up.
+- `segments` — per-utterance breakdown with timestamps; absent when the Whisper endpoint in use doesn't return segment-level timestamps (our current homelab endpoint only returns whole-clip `text`/`language`/`duration` — see issue #5). Stages needing timestamps (scene splitting, segment-level tagging) must handle a missing `segments` array until a segment-capable endpoint is wired up.
 - `segments[].id` — stable ID (`sNNN`, zero-padded, sequential), not the array index — split scenes and tag data reference segments by this ID
 - `segments[].tags` — populated by the tagging stage (issue #9's NLP pass, then AI fallback); empty until tagging runs
 
-See `tests/fixtures/transcripts/julia/tape001_2026-07-13.json` for a full example (currently `segments: null`, reflecting the flat-text-only endpoint response).
+`tests/fixtures/transcripts/julia/tape001_2026-07-13.json` shows the target shape (hand-edited to add `source`/`recorded_date`/`tags` — `transcribe.py` didn't generate those fields). `tape002_2026-07-15.json` and `tape003_2026-07-15.json` are unmodified `transcribe.py` output and only have `language`/`duration`/`text`.
 
 ## Status
 
-Early planning stage — no pipeline code yet. See the GitHub issues for the current task breakdown, dependencies between stages, and open design questions.
+Transcribe stage is implemented (`scripts/transcribe.py`, calling a Whisper server on the homelab over SMB) and has a test harness (LLM-as-judge scoring against hand-written goldens, see `issues/plans/002-transcript-testing.md`). Everything else in the pipeline is still planning-stage — see the GitHub issues for task breakdown, dependencies, and open design questions.
 
-Christian is still working on getting Whisper Set up, so we can run whisper for now via: 
+Whisper is set up and working on the homelab server. Requires a `.env` (see `.env.example`) with `WHISPER_HOST`, `SAMBA_HOST`, `SAMBA_USERNAME`, `SAMBA_PASSWORD` set, then run via:
 ```
 .venv-whisper/bin/python scripts/transcribe.py <video_path>
 ```

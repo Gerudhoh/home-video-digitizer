@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-No pipeline code exists yet — this repo is in the planning stage. The architecture below is the *planned* design, pulled from GitHub issues, not yet implemented. There are no build/lint/test commands to run yet; add them here once code exists.
+Most of the pipeline is still planning-stage, but the **Transcribe** stage is implemented: `scripts/transcribe.py` extracts audio with ffmpeg, ships it to a Whisper server running on the homelab (bespin LXC) over SMB, and returns `{language, duration, text}`. It currently does *not* produce `source`, `recorded_date`, `segments`, or `tags` — see "Transcript schema" below for what's aspirational vs. actually emitted today. A test harness for judging transcription accuracy against hand-written goldens also exists under `tests/fixtures/` (LLM-as-judge via Ollama; see `issues/plans/002-transcript-testing.md`). The rest of the architecture below is still the *planned* design, pulled from GitHub issues, not yet implemented. There are no build/lint commands yet; tests run via `python tests/fixtures/tests/whisper_tests.py` against a reachable Ollama/Whisper instance.
 
 ## Purpose
 
@@ -51,7 +51,7 @@ Split clips (issue #11) get a `sceneNN` suffix under a folder named for the sour
 
 ## Transcript schema
 
-Transcript JSON extends raw Whisper output with a `source` path, a `recorded_date` slot (filled in by the OCR stage, issue #7), and per-segment `id`/`tags` fields so later stages (scene split, tagging) can reference a segment without relying on array position. Full schema and example in the README's "Transcript schema" section; reference fixture at `tests/fixtures/transcripts/julia/tape001_2026-07-13.json`.
+`scripts/transcribe.py` today only emits `{language, duration, text}` — no `source`, `recorded_date`, `segments`, or `tags`. Those fields are the *target* schema for later stages (OCR fills `recorded_date`, tagging fills `tags`, a future segment-capable Whisper endpoint fills `segments`) and are not added by any code yet. Full target schema and example in the README's "Transcript schema" section; `tests/fixtures/transcripts/julia/tape001_2026-07-13.json` shows the target shape (hand-edited to add `source`/`recorded_date`/`tags`), while `tape002_2026-07-15.json`/`tape003_2026-07-15.json` show `transcribe.py`'s actual current output.
 
 ## Where to find current scope
 

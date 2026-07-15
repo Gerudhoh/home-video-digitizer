@@ -3,6 +3,14 @@
 Source: https://github.com/Gerudhoh/home-video-digitizer/issues/2
 Depends on: #3 (closed — local Whisper set up in `.venv-whisper`)
 
+> **Implementation status:** this plan predates the code and hasn't been kept in sync. What's actually under `tests/fixtures/{prompts,scripts,tests}/` diverges from the plan below in several ways:
+> - Goldens live next to their transcripts in `tests/fixtures/transcripts/<owner>/` as `_GOLDEN.txt` files, not in a separate `tests/fixtures/goldens/` dir (the plan's stated reason for the split — never diffing a golden against itself — doesn't apply since the two use different filenames).
+> - No shared `config.py`/`.toml`: `JUDGE_MODEL` (`llama3.1:8b`) is hardcoded in `validate_whisper.py`; there's no `JUDGE_TEMPERATURE`, `JUDGE_SAMPLES_PER_FIXTURE`, or `JUDGE_PASS_THRESHOLD` anywhere in the codebase.
+> - The judge runs once per fixture (not 3x + median), score is 0–1 not 0–100, and nothing enforces a pass/fail threshold — `whisper_tests.py` just writes every raw score into `results.json`/`results.html` for a human to read.
+> - `generate_test_results.py`'s HTML report (pass ≥0.7 / warn ≥0.4 / fail below, per-run color bands) isn't described in this plan at all.
+> - The runner is `tests/fixtures/tests/whisper_tests.py`, not `tests/test_transcripts.py`.
+> The "Decisions" and "Pseudocode" sections below are kept as the historical record of what was originally intended; treat the code as authoritative for what's actually running.
+
 ## Decisions
 
 - **Comparison method: LLM-as-judge**, calling the Ollama instance on the homelab server (bespin LXC) over its HTTP API — not a locally-installed model on the dev machine.
