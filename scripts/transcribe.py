@@ -18,21 +18,33 @@ def transcribe(video_path: Path, model_size: str = "small"):
         word_timestamps=True,
     )
 
-    result = {
-        "language": info.language,
-        "duration": info.duration,
-        "segments": [
-            {
-                "start": seg.start,
-                "end": seg.end,
-                "text": seg.text.strip(),
-                "words": [
-                    {"start": w.start, "end": w.end, "word": w.word}
-                    for w in (seg.words or [])
-                ],
-            }
-            for seg in segments
-        ],
+    return audio_track_path
+
+
+def mount_audio_file_to_server(audio_track_path):
+    owner = audio_track_path.parent.name
+    remote_dir = rf"\\{SAMBA_HOST}\Share\TapeAudio\{owner}"
+    smbclient.makedirs(remote_dir, exist_ok=True)
+    remote_path = rf"{remote_dir}\{audio_track_path.name}"
+    smbclient.shutil.copy(str(audio_track_path), remote_path)
+    # Return the SMB path (for cleanup) and the path as the whisper container sees the same volume
+    return remote_path, f"{WHISPER_SHARE_ROOT}/TapeAudio/{owner}/{audio_track_path.name}"
+
+
+def transcribe(server_audio_path: Path):
+    resp = requests.post(
+        f"{WHISPER_HOST}/transcribe",
+        json={
+            "input_path": str(server_audio_path),
+        },
+    )
+    resp.raise_for_status()
+    result = resp.json()
+
+    return {
+        "language": result["language"],
+        "duration": result["duration"],
+        "text": result["text"],
     }
     return result
 
