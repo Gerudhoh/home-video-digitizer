@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from ffmpeg_helper import FfmpegHelper, split_video_ffmpeg
 from ocr_helper import OCR
-from Scene import SceneMetaData
+from Scene import SceneMetaData, scenes_to_timecode_pairs
 
 DEFAULT_THRESHOLD = 80.5
 
@@ -14,6 +14,7 @@ def create_scene_metadata_list(raw_scene_list, video_path):
             SceneMetaData(
                 parent_video_path=video_path,
                 video_timestamp=raw_scene[0],
+                video_timestamp_end=raw_scene[1],
                 extracted_datetime=None
             )
         )
@@ -41,7 +42,8 @@ def split_video_into_scenes(video_path, output_path, threshold):
         scene_list = create_scene_metadata_list(raw_scene_list, video_path)
         capture_scene_start(scene_list)
         perform_ocr_on_scenes(scene_list)
-        # split_video_ffmpeg(video_path, scene_list, output_path, show_progress=True)
+        timecode_pairs = scenes_to_timecode_pairs(scene_list)
+        split_video_ffmpeg(video_path, timecode_pairs, output_path, show_progress=True)
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:

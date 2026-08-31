@@ -1,11 +1,18 @@
+from collections.abc import Sequence
+
+from scenedetect import TimecodePair
+
+
 class SceneMetaData:
-    def __init__(self, 
+    def __init__(self,
                  parent_video_path,     # Path to the video in which this scene occurs
                  video_timestamp,       # The time in the video this occurs
+                 video_timestamp_end,   # The time in the video this scene ends
                  extracted_datetime     # The date and time the scene was recorded
                  ):
         self.video_path = parent_video_path
         self.timestamp = video_timestamp
+        self.timestamp_end = video_timestamp_end
         self.datetime = extracted_datetime
 
     def get_screenshot_name(self):
@@ -21,3 +28,7 @@ class SceneMetaData:
 
     def __repr__(self):
         return f"Scene from {self.video_path} at {self.timestamp} on {self.datetime or "? date"}"
+
+
+def scenes_to_timecode_pairs(scenes: Sequence[SceneMetaData]) -> Sequence[TimecodePair]:
+    return [(scene.timestamp, scene.timestamp_end) for scene in scenes]
