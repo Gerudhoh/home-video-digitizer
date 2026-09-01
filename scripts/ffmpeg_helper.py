@@ -1,15 +1,21 @@
 from scenedetect import open_video, SceneManager, split_video_ffmpeg
-from scenedetect.detectors import ContentDetector
+from scenedetect.detectors import AdaptiveDetector
 import ffmpeg
 from pathlib import Path
 from PIL import Image
 
 class FfmpegHelper:
     @staticmethod
-    def get_scene_bounds(video_path, threshold):
+    def get_scene_bounds(video_path, threshold, window_width=3, min_scene_len=30):
         video = open_video(video_path)
         scene_manager = SceneManager()
-        scene_manager.add_detector(ContentDetector(threshold=threshold))
+        scene_manager.add_detector(
+            AdaptiveDetector(
+                adaptive_threshold=threshold,
+                window_width=window_width,
+                min_scene_len=min_scene_len,
+            )
+        )
 
         scene_manager.detect_scenes(video, show_progress=True)
         return scene_manager.get_scene_list()
@@ -30,7 +36,7 @@ class FfmpegHelper:
             return False
 
     # box = (left, top, right, bottom) in pixels"""
-    def crop_date_overlay(image_path, output_path, box=(650, 650, 1080, 725)):
+    def crop_date_overlay(image_path, output_path, box=(525, 450, 1080, 725)):
         img = Image.open(image_path)
         cropped = img.crop(box)
         cropped.save(output_path)
