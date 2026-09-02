@@ -5,6 +5,7 @@ import requests
 import ffmpeg
 import smbclient
 import smbclient.shutil
+from Scene import SceneMetaData
 
 from pathlib import Path
 from dotenv import load_dotenv
@@ -49,13 +50,21 @@ def mount_audio_file_to_server(audio_track_path):
     return remote_path, f"{WHISPER_SHARE_ROOT}/TapeAudio/{owner}/{audio_track_path.name}"
 
 
+# Vocabulary hint passed to Whisper via initial_prompt to bias decoding toward
+# these spellings -- without it, proper names get misheard into phonetically
+# plausible nonsense (e.g. "Kath" -> "Cat", "Paula" -> "hall"). Hardcoded here as
+# a stopgap; move into the planned shared people/dates config (issue #9) once it
+# exists, since the actual names differ per household.
+NAME_VOCABULARY_PROMPT = "Kath, Julia, Pete, Annie, Ben, Jess, Bobo, Paula, Christian"
+
+
 def transcribe(server_audio_path: Path):
     resp = requests.post(
         f"{WHISPER_HOST}/transcribe",
         json={
             "input_path": str(server_audio_path),
+            "initial_prompt": NAME_VOCABULARY_PROMPT,
         },
-        timeout=300,
     )
     resp.raise_for_status()
     result = resp.json()
@@ -85,18 +94,22 @@ def create_transcript_path(video_path):
     )
     return transcript_dir / video_path.with_suffix(".json").name
 
+def write_scene_trancript(scene):
+    return write_transcript(scene.video_path, scene.transcript)
+
+def write_transcript(video_path, transcript_json=None):
+    output_path = create_transcript_path(video_path)
+    if output_path.exists() and not force:
+            print(f"Skipping {video_path}: transcript already exists at {output_path} (use --force to re-run)")
+            return None
+    
+    result = transcript_json or get_json_transcription(video_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    return output_path
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if a != "--force"]
     force = len(args) != len(sys.argv[1:])
     video_path = Path(args[0])
-    output_path = create_transcript_path(video_path)
-
-    if output_path.exists() and not force:
-        print(f"Skipping {video_path}: transcript already exists at {output_path} (use --force to re-run)")
-        sys.exit(0)
-
-    result = get_json_transcription(video_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps(result, indent=2, ensure_ascii=False))
+    write_transcript(video_path)

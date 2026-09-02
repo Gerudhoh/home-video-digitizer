@@ -5,15 +5,19 @@ from scenedetect import TimecodePair
 
 class SceneMetaData:
     def __init__(self,
-                 parent_video_path,     # Path to the video in which this scene occurs
-                 video_timestamp,       # The time in the video this occurs
-                 video_timestamp_end,   # The time in the video this scene ends
-                 extracted_datetime     # The date and time the scene was recorded
+                 parent_video_path,         # Path to the video in which this scene occurs
+                 video_timestamp,           # The time in the video this occurs
+                 video_timestamp_end,       # The time in the video this scene ends
+                 extracted_datetime,        # The date and time the scene was recorded
+                 transcript_json={},        # The json of the transcript
+                 transcript_output_path="", # The path to the transcript
                  ):
         self.video_path = parent_video_path
         self.timestamp = video_timestamp
         self.timestamp_end = video_timestamp_end
         self.datetime = extracted_datetime
+        self.transcript = transcript_json
+        self.transcript_path = transcript_output_path
 
     def get_screenshot_name(self):
         scenes_dir = self.video_path.parent / "scenes" / "screenshots"

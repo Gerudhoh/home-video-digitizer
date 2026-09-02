@@ -43,8 +43,9 @@ def split_video_into_scenes(video_path, output_path, threshold):
         capture_scene_start(scene_list)
         perform_ocr_on_scenes(scene_list)
         timecode_pairs = scenes_to_timecode_pairs(scene_list)
-        print(scene_list)
         split_video_ffmpeg(video_path, timecode_pairs, output_path, show_progress=True)
+        return scene_list
+    return None
 
 
 if __name__ == "__main__":
