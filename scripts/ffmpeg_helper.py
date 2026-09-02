@@ -35,9 +35,23 @@ class FfmpegHelper:
             print(f"Error: {e.stderr.decode()}")
             return False
 
-    # box = (left, top, right, bottom) in pixels"""
-    def crop_date_overlay(image_path, output_path, box=(525, 450, 1080, 725)):
+    # region = (left, top, right, bottom) as fractions (0-1) of the frame's
+    # actual width/height, anchored to the bottom-right corner where camcorder
+    # date overlays are burned in. Fractional so it scales across capture
+    # resolutions instead of the fixed-pixel box this replaced, which only
+    # ever matched one specific resolution and silently clipped to black on
+    # any other.
+    @staticmethod
+    def crop_date_overlay(image_path, output_path, region=(0.5, 0.7, 1.0, 1.0)):
         img = Image.open(image_path)
+        width, height = img.size
+        left, top, right, bottom = region
+        box = (
+            int(left * width),
+            int(top * height),
+            int(right * width),
+            int(bottom * height),
+        )
         cropped = img.crop(box)
         cropped.save(output_path)
         return cropped
